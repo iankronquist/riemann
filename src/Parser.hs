@@ -103,18 +103,28 @@ varStatement = do
   return $ VarExp name expression
 
 
+bareStatement :: Parser Expr
+bareStatement = do
+  name <- identifier
+  equals <- reservedOperators "="
+  expression <- expr
+  return $ BareAssign name expression
+
+
 -- The <|> operator is defined in parsec. It means "try this function, but if that doesn't work, try the next one"
 factor :: Parser Expr
 factor = try afloat
   <|> try int
   <|> try letStatement
   <|> try varStatement
+  <|> try bareStatement
   <|> try stringLit
   <|> try funcDef
   <|> try funcCall
   <|> try variable
   <|> try stringLit
   <|> try parseIf
+  <|> try objectLit
   <|> parentheses expr
 
 funcBodyFactor :: Parser Expr

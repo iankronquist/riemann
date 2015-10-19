@@ -6,6 +6,7 @@ data Expr = Float Double
   | Interesting Integer
   | Let String Expr
   | VarExp String Expr
+  | BareAssign String Expr
   | If Expr [Expr]
   | Return Expr
   | Pair String Expr
