@@ -45,5 +45,8 @@ reserved = Tok.reserved lexer
 colon :: Parser String
 colon = Tok.colon lexer
 
+dot :: Parser String
+dot = Tok.dot lexer
+
 reservedOperators :: String -> Parser ()
 reservedOperators = Tok.reservedOp lexer

@@ -102,6 +102,12 @@ varStatement = do
   expression <- expr
   return $ VarExp name expression
 
+attrAccessor :: Parser Expr
+attrAccessor = do
+  variable <- identifier
+  dotdot <- dot
+  property <- identifier
+  return $ Accessor variable property
 
 bareStatement :: Parser Expr
 bareStatement = do
@@ -113,7 +119,8 @@ bareStatement = do
 
 -- The <|> operator is defined in parsec. It means "try this function, but if that doesn't work, try the next one"
 factor :: Parser Expr
-factor = try afloat
+factor = try attrAccessor
+  <|> try afloat
   <|> try int
   <|> try letStatement
   <|> try varStatement

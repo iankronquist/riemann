@@ -7,6 +7,7 @@ data Expr = Float Double
   | Let String Expr
   | VarExp String Expr
   | BareAssign String Expr
+  | Accessor String String
   | If Expr [Expr]
   | Return Expr
   | Pair String Expr
