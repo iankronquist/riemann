@@ -36,6 +36,9 @@ parentheses = Tok.parens lexer
 braces :: Parser a -> Parser a
 braces = Tok.braces lexer
 
+brackets :: Parser a -> Parser a
+brackets = Tok.brackets lexer
+
 commaSeparated :: Parser a -> Parser [a]
 commaSeparated = Tok.commaSep lexer
 

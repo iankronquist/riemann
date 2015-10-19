@@ -6,6 +6,7 @@ data Expr = Float Double
   | Interesting Integer
   | Let String Expr
   | VarExp String Expr
+  | ArrayLiteral [Expr]
   | BareAssign String Expr
   | Accessor String String
   | If Expr [Expr]

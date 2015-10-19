@@ -52,8 +52,13 @@ funcCall = do
 
 objectLit :: Parser Expr
 objectLit = do
-  body <- braces $ commaSeparated $ pair
+  body <- braces $ commaSeparated pair
   return $ Object body
+
+arrayLit :: Parser Expr
+arrayLit = do
+  body <- brackets $ commaSeparated expr
+  return $ ArrayLiteral body
 
 pair :: Parser Expr
 pair = do
@@ -126,6 +131,7 @@ factor = try attrAccessor
   <|> try varStatement
   <|> try bareStatement
   <|> try stringLit
+  <|> try arrayLit
   <|> try funcDef
   <|> try funcCall
   <|> try variable
