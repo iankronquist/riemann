@@ -60,6 +60,12 @@ arrayLit = do
   body <- brackets $ commaSeparated expr
   return $ ArrayLiteral body
 
+bracketAccessor :: Parser Expr
+bracketAccessor = do
+  obj <- identifier
+  item <- brackets expr
+  return $ BracketAccessor obj item
+
 pair :: Parser Expr
 pair = do
   name <- identifier
@@ -130,6 +136,7 @@ factor = try attrAccessor
   <|> try letStatement
   <|> try varStatement
   <|> try bareStatement
+  <|> try bracketAccessor
   <|> try stringLit
   <|> try arrayLit
   <|> try funcDef

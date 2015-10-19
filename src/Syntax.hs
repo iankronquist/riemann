@@ -7,6 +7,7 @@ data Expr = Float Double
   | Let String Expr
   | VarExp String Expr
   | ArrayLiteral [Expr]
+  | BracketAccessor String Expr
   | BareAssign String Expr
   | Accessor String String
   | If Expr [Expr]
