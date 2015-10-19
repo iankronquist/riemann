@@ -11,7 +11,7 @@ import Lexer
 import Syntax
 
 -- Helper function to build the association table
-binary sym func assoc = Expr.Infix (reservedOperators sym >> return (BinOp func)) assoc
+binary sym func = Expr.Infix (reservedOperators sym >> return (BinOp func))
 
 
 associationTable = [
@@ -40,7 +40,7 @@ variable = do
 funcDef :: Parser Expr
 funcDef = do
   name <- identifier
-  args <- parentheses $ commaSeparated $ expr
+  args <- parentheses $ commaSeparated expr
   body <- braces $ many bodyExpr
   return $ FuncDef name args body
 
@@ -97,20 +97,23 @@ expr = Expr.buildExpressionParser associationTable factor
 bodyExpr :: Parser Expr
 bodyExpr = Expr.buildExpressionParser associationTable funcBodyFactor
 
-letStatement :: Parser Expr
-letStatement = do
-  letItGo <- reserved "let"
+assignmentHelper :: Parser (String, Expr)
+assignmentHelper = do
   name <- identifier
   equals <- reservedOperators "="
   expression <- expr
+  return (name, expression)
+
+letStatement :: Parser Expr
+letStatement = do
+  letItGo <- reserved "let"
+  (name, expression) <- assignmentHelper
   return $ Let name expression
 
 varStatement :: Parser Expr
 varStatement = do
   varItGo <- reserved "var"
-  name <- identifier
-  equals <- reservedOperators "="
-  expression <- expr
+  (name, expression) <- assignmentHelper
   return $ VarExp name expression
 
 attrAccessor :: Parser Expr
@@ -122,9 +125,7 @@ attrAccessor = do
 
 bareStatement :: Parser Expr
 bareStatement = do
-  name <- identifier
-  equals <- reservedOperators "="
-  expression <- expr
+  (name, expression) <- assignmentHelper
   return $ BareAssign name expression
 
 
@@ -157,4 +158,4 @@ inputContents contents = do
   return marrow
 
 parseExpr :: String -> Either ParseError Expr
-parseExpr s = parse (inputContents expr) "<stdin>" s
+parseExpr = parse (inputContents expr) "<stdin>"

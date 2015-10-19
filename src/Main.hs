@@ -19,4 +19,4 @@ main = runInputT defaultSettings loop
     input <- getInputLine "ζ "
     case input of 
       Nothing -> outputStrLn "αντίο!"
-      Just line -> (liftIO $ process line) >> loop
+      Just line -> liftIO (process line) >> loop
