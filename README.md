@@ -16,5 +16,7 @@ Building
 You will need Cabal and GHC.
 
 ```
+$ cabal sandbox init
+$ cabal install
 $ cabal build
 ```
