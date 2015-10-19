@@ -2,3 +2,5 @@
 *.hi
 Main
 .*.swp
+.cabal-sandbox/*
+dist
