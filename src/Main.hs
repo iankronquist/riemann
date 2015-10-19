@@ -2,7 +2,7 @@ module Main where
 
 import Parser
 
-import Control.Monad.Trans
+import Control.Monad.IO.Class
 import System.Console.Haskeline
 
 process :: String -> IO ()
