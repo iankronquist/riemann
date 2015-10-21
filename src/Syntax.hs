@@ -10,14 +10,16 @@ data Expr = Float Double
   | BracketAccessor String Expr
   | BareAssign String Expr
   | Accessor String String
-  | If Expr [Expr]
+  | IfElse Expr Expr Expr
+  | If Expr Expr
   | Return Expr
   | Pair String Expr
   | Object [Expr]
   | BinOp Op Expr Expr
+  | BracesExpr [Expr]
   | Var String
   | StringLit String
-  | FuncDef Name [Expr] [Expr]
+  | FuncDef [Expr] Expr
   | FuncCall Name [Expr]
   deriving (Eq, Ord, Show)
 

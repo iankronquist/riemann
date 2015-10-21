@@ -39,10 +39,10 @@ variable = do
 
 funcDef :: Parser Expr
 funcDef = do
-  name <- identifier
+  _ <- reserved "fun"
   args <- parentheses $ commaSeparated expr
-  body <- braces $ many bodyExpr
-  return $ FuncDef name args body
+  body <- bodyExpr
+  return $ FuncDef args body
 
 funcCall :: Parser Expr
 funcCall = do
@@ -75,10 +75,23 @@ pair = do
 
 parseIf :: Parser Expr
 parseIf = do
-  fi <- reserved "if"
-  condition <- parentheses expr
-  body <- braces $ many expr
-  return $ If condition body
+  _ <- reserved "if"
+  condition <- expr
+  _ <- reserved "then"
+  body <- expr
+  --result <- try (reserved "else" *> expr)
+  return $ If condition body --result
+
+parseIfElse :: Parser Expr
+parseIfElse = do
+  _ <- reserved "if"
+  condition <- expr
+  _ <- reserved "then"
+  body <- expr
+  _ <- reserved "else"
+  elsebody <- expr
+  return $ IfElse condition body elsebody
+
 
 returnExp :: Parser Expr
 returnExp = do
@@ -96,6 +109,11 @@ expr = Expr.buildExpressionParser associationTable factor
 
 bodyExpr :: Parser Expr
 bodyExpr = Expr.buildExpressionParser associationTable funcBodyFactor
+
+bracesExpr :: Parser Expr
+bracesExpr = do
+  body <- braces $ many expr
+  return $ BracesExpr body
 
 assignmentHelper :: Parser (String, Expr)
 assignmentHelper = do
@@ -139,11 +157,13 @@ factor = try attrAccessor
   <|> try bareStatement
   <|> try bracketAccessor
   <|> try stringLit
+  <|> try bracesExpr
   <|> try arrayLit
   <|> try funcDef
   <|> try funcCall
   <|> try variable
   <|> try stringLit
+  <|> try parseIfElse
   <|> try parseIf
   <|> try objectLit
   <|> parentheses expr
