@@ -1,0 +1,66 @@
+comment := "//" . "\n"
+         | "/*" . "*/"
+
+expression_type := let_expression
+                  | var_expression
+                  | assignment
+                  | func_call
+                  | braces_expression
+                  | array
+                  | parentheses
+                  | if
+                  | object_literal
+                  | identifier
+                  | numeral
+                  | binary_expression
+
+expression := expression_type | expression_type ";"
+
+let_expression := "let" expression
+var_expression := "let" expression
+
+assignment := identifier "=" expression
+            | accessor "=" expression
+
+accessor := identifier "[" expression "]"
+          | identifier "." accessor
+
+
+func_call := expression "(" expression_list ")"
+
+expression_list := expression
+                 | expression "," expression_list
+
+func_body := expression | "return" expression
+
+func_body_list := func_body | func_body func_body
+
+func_def := "fun" "(" func_body_list ")" expression
+
+braces_expression := "{" expression_list "}"
+
+array := "[" expression_list "]"
+
+parentheses := "(" expression ")"
+
+if := "if" expression "then" expression
+    | "if" expression "then" expression "else" expression
+
+object_literal := "{" pair_list "}"
+
+pair := identifier ":" expression
+
+pair_list := pair
+           | pair "," pair_list
+
+operator := "+" | "-" | ">" | "<" | ">=" | "<=" | "==" | "!="
+
+binary_expression := expression operator expression
+
+alphabet := a | b | ... | z | A | B | ... | Z | _
+numeral := 0 | 1 | ... | 9
+
+identifier := alphabet*
+            | identifier [numeral*] [identifier]
+
+string := "\"" . "\""
